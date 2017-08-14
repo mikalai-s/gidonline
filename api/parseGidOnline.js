@@ -20,7 +20,7 @@ function extractVideoIframeSrc(html) {
 }
 
 
-function parse(url) {
+function parse(url, clientIp) {
     return axios(url)
         .then(res => {
             const iframeUrl = extractVideoIframeSrc(res.data);
@@ -51,7 +51,8 @@ function parse(url) {
                         'Accept': '*/*',
                         'Referer': url,
                         'Content-Type': 'application/x-www-form-urlencoded',
-                        'X-Requested-With': 'XMLHttpRequest'
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'x-forwarded-for': clientIp + ''
                     }
                 }
             )
@@ -69,7 +70,14 @@ function parse(url) {
 
             console.log('STEP 1:', iframeUrl);
 
-            return axios({ method: 'GET', url: iframeUrl, headers: { 'Referer': 'http://gidonline.club' }})
+            return axios({
+                method: 'GET',
+                url: iframeUrl,
+                headers: {
+                    'Referer': 'http://gidonline.club',
+                    'x-forwarded-for': clientIp + ''
+                }
+            });
         })
         .then(res => {
             let script = [];
@@ -114,8 +122,6 @@ function parse(url) {
             console.log(Object.keys(window));
             console.log(url);
 
-
-
             rx = /<meta\s*name\s*=\s*"csrf-token"\s*content\s*=\s*"(.*)"/g;
             var csrfToken = rx.exec(res.data)[1];
 
@@ -126,7 +132,15 @@ function parse(url) {
 
             console.log('STEP 2:', url);
 
-           return axios.post(url, window[Object.keys(window)[0]], { headers: { 'Referer': 'http://pandastream.cc', 'X-CSRF-Token': csrfToken, 'X-Access-Level': xAccessLevel, 'X-Requested-With':'XMLHttpRequest' }});
+           return axios.post(url, window[Object.keys(window)[0]], {
+               headers: {
+                   'Referer': 'http://pandastream.cc',
+                   'X-CSRF-Token': csrfToken,
+                   'X-Access-Level': xAccessLevel,
+                   'X-Requested-With':'XMLHttpRequest',
+                   'x-forwarded-for': clientIp + ''
+                }
+            });
         })
         .then(res => {
             //console.log(res.data);
@@ -156,11 +170,11 @@ function parseManifest(type, data) {
         return parser.manifest.playlists.map(i => {
             return {
                 title: `${i.attributes.RESOLUTION.width}x${i.attributes.RESOLUTION.width}, ${i.attributes.BANDWIDTH / 1000} KHz`,
-                url: `/api/stream?url=${escape(i.uri)}`
+                url: i.uri
             };
         });
     } if (type === 'mp4') {
-        return Object.keys(data).map(k => ({ title: k, url: `/api/stream?url=${escape(data[k])}` }));
+        return Object.keys(data).map(k => ({ title: k, url: data[k] }));
     }
 }
 

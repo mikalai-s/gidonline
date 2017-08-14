@@ -29,8 +29,12 @@ module.exports = [
   {
     method: 'GET',
     path: '/api/parse',
-    handler: function ({ query }, reply) {
-      parse(query.url)
+    handler: function (request, reply) {
+      const clientIp = request.headers['x-forwarded-for'] ||
+        request.connection.remoteAddress ||
+        request.socket.remoteAddress ||
+        request.connection.socket.remoteAddress;
+      parse(request.query.url, clientIp)
         .then(reply)
         .catch(e => {
           console.error(e);
@@ -53,3 +57,6 @@ module.exports = [
     }
   }
 ];
+
+
+
