@@ -1,5 +1,13 @@
+html, body, #root {
+  height: 100%;
+  width: 100%
+}
+
 .App {
   text-align: center;
+  width: 100%;
+  position: relative;
+  top: 30%;
 }
 
 .App-logo {
@@ -21,4 +29,21 @@
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+
+input {
+  font-size: 17px;
+  width: 70%;
+}
+
+.error {
+  color: red;
+}
+
+ul.center {
+  display: table;
+  margin: 0 auto;
+  text-align: left;
+  margin-top: 30px;
 }

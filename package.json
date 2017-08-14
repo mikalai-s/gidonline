@@ -3,16 +3,32 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "axios": "^0.16.2",
+    "hapi": "^16.4.3",
+    "inert": "^4.2.0",
+    "joi": "^10.6.0",
+    "lodash.debounce": "^4.0.8",
+    "m3u8-parser": "^3.0.0",
+    "moment": "^2.18.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-scripts": "1.0.10"
+    "react-router-dom": "^4.1.1",
+    "react-scripts": "1.0.7",
+    "react-simple-loading-bar": "^1.1.4",
+    "xml-parser": "^1.2.1"
   },
   "devDependencies": {
+    "nodemon": "^1.11.0",
+    "npm-run-all": "^4.0.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm-run-all --parallel watch:client watch:server",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  }
+    "eject": "react-scripts eject",
+    "watch:client": "react-scripts start",
+    "watch:server": "./node_modules/.bin/nodemon api/app.js",
+    "heroku-postbuild": "react-scripts build"
+  },
+  "proxy": "http://localhost:4000"
 }
