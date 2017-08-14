@@ -12,10 +12,8 @@ function parserError(message, step, details) {
 
 
 function extractVideoIframeSrc(html) {
-    console.log(html);
     const rx = /<iframe.*?src\s*=\s*"(.*?)"/g;
     const m = rx.exec(html) || [];
-    console.log(m);
     return m.slice(1).filter(u => u.indexOf('pandastream') > 0)[0];
 }
 
@@ -82,7 +80,7 @@ function parse(url, clientIp) {
         .then(res => {
             let script = [];
 
-            console.log(res.data);
+            //console.log(res.data);
 
             var lines = res.data.split('\n');
 
@@ -117,15 +115,15 @@ function parse(url, clientIp) {
             const window = {};
             eval(script.join(''));
 
-            console.log(script.join(''));
+            //console.log(script.join(''));
 
-            console.log(Object.keys(window));
-            console.log(url);
+            //console.log(Object.keys(window));
+            //console.log(url);
 
             rx = /<meta\s*name\s*=\s*"csrf-token"\s*content\s*=\s*"(.*)"/g;
             var csrfToken = rx.exec(res.data)[1];
 
-            console.log(csrfToken);
+            //console.log(csrfToken);
 
             rx = /'X-Access-Level':\s*'(.*?)'/g;
             var xAccessLevel = rx.exec(res.data)[1];
