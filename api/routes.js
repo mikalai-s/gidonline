@@ -1,7 +1,9 @@
 'use strict';
 
 const Joi = require('joi');
+const axios = require('axios');
 const parse = require('./parseGidOnline');
+
 
 module.exports = [
   {
@@ -31,9 +33,23 @@ module.exports = [
       parse(query.url)
         .then(reply)
         .catch(e => {
-            console.error(e);
-            reply({ error: e.message, details: e.details }).code(500);
+          console.error(e);
+          reply({ error: e.message, details: e.details }).code(500);
         });
     }
   },
+  {
+    method: 'GET',
+    path: '/api/stream',
+    handler: function ({ query }, reply) {
+      axios({
+        method: 'GET',
+        url: query.url,
+        responseType: 'stream'
+      })
+        .then(function (response) {
+          reply(response.data);
+        });
+    }
+  }
 ];

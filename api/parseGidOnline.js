@@ -156,11 +156,11 @@ function parseManifest(type, data) {
         return parser.manifest.playlists.map(i => {
             return {
                 title: `${i.attributes.RESOLUTION.width}x${i.attributes.RESOLUTION.width}, ${i.attributes.BANDWIDTH / 1000} KHz`,
-                url: i.uri
+                url: `/api/stream?url=${escape(i.uri)}`
             };
         });
     } if (type === 'mp4') {
-        return Object.keys(data).map(k => ({ title: k, url: data[k] }));
+        return Object.keys(data).map(k => ({ title: k, url: `/api/stream?url=${escape(data[k])}` }));
     }
 }
 
