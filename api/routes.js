@@ -35,6 +35,8 @@ module.exports = [
         request.socket.remoteAddress ||
         request.connection.socket.remoteAddress;
       console.log('IP', clientIp);
+      console.log(request.headers);
+      return reply();
       parse(request.query.url, clientIp)
         .then(reply)
         .catch(e => {
